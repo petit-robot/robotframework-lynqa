@@ -1,0 +1,3 @@
+[submodule "cfg"]
+	path = cfg
+	url = git@github.com:petit-robot/cfg.git
