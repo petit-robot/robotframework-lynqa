@@ -17,6 +17,8 @@ dev = [
     "pytest>=7",
     "pytest-mock>=3",
     "pytest-responses>=0.5",
+    "ruff>=0.14",
+    "ty>=0.0",
 ]
 
 [tool.setuptools.packages.find]

@@ -1,0 +1,1158 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      description: >-
+        Returns the current status of the API along with its version and
+        timestamp.
+      operationId: RootController_root
+      parameters: []
+      responses:
+        '200':
+          description: API is up and running
+          content:
+            application/json:
+              schema:
+                example:
+                  name: lynqa-api
+                  status: ok
+                  version: 1.0.0
+                  docs: /api-docs
+                  time: '2026-04-21T10:00:00.000Z'
+      summary: Health check
+      tags:
+        - Root
+  /health/live:
+    get:
+      operationId: HealthController_live
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: Liveness probe — returns ok if the process is running
+      tags:
+        - Health
+  /health/ready:
+    get:
+      operationId: HealthController_ready
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: >-
+        Readiness probe — returns ready status based on Databases and systems
+        availability
+      tags:
+        - Health
+  /hardMaintenance:
+    get:
+      operationId: HardMaintenanceController_get
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - HardMaintenance
+  /testRuns/{testRunId}/testSteps/{stepIndex}:
+    get:
+      operationId: TestStepsController_getTestRunStepStatus
+      parameters:
+        - name: stepIndex
+          required: true
+          in: path
+          description: Index of the step to retrieve
+          schema:
+            type: number
+            minimum: 0
+        - name: testRunId
+          required: true
+          in: path
+          description: ID of the test run
+          schema:
+            type: number
+      responses:
+        '200':
+          description: >-
+            Status report of the requested step, including executed commands and
+            the outcome (timestamps, assertions report, verdict cause, or error
+            depending on status).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepReport'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Test run step not found
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get the status report of a specific step within a test run
+      tags:
+        - TestSteps
+  /testRuns:
+    post:
+      operationId: TestRunsController_addTestRun
+      parameters:
+        - name: x-api-consumer
+          required: true
+          in: header
+          description: >-
+            Identifies the source application of the request. Supports
+            hierarchical values separated by ":" (e.g.
+            "jira:my-instance.atlassian.net").
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Test to execute the test run
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTest'
+      responses:
+        '201':
+          description: The test run id
+          content:
+            application/json:
+              schema:
+                type: string
+                example: mf4zz9945nwbofv81shozwb5
+        '400':
+          description: Test is malformed
+        '401':
+          description: Authentication failed
+        '403':
+          description: Not enough credits
+        '422':
+          description: URL is not safe
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Execute a manual test
+      tags:
+        - TestRuns
+  /testRuns/gherkin:
+    post:
+      operationId: TestRunsController_addGherkinTestRun
+      parameters:
+        - name: x-api-consumer
+          required: true
+          in: header
+          description: >-
+            Identifies the source application of the request. Supports
+            hierarchical values separated by ":" (e.g.
+            "jira:my-instance.atlassian.net").
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Gherkin test to execute
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGherkinTest'
+      responses:
+        '201':
+          description: The test run id
+          content:
+            application/json:
+              schema:
+                type: string
+                example: mf4zz9945nwbofv81shozwb5
+        '400':
+          description: Test is malformed
+        '401':
+          description: Authentication failed
+        '403':
+          description: Not enough credits
+        '422':
+          description: URL is not safe
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Execute a Gherkin test
+      tags:
+        - TestRuns
+  /testRuns/{testRunId}:
+    get:
+      operationId: TestRunsController_getTestRun
+      parameters:
+        - name: testRunId
+          required: true
+          in: path
+          description: ID of the test
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Test with steps
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Test'
+                  - $ref: '#/components/schemas/GherkinTest'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Test not found
+        '410':
+          description: Test run expired
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get test with the specified ID
+      tags:
+        - TestRuns
+    delete:
+      operationId: TestRunsController_deleteTestRun
+      parameters:
+        - name: testRunId
+          required: true
+          in: path
+          description: ID of the test run to delete
+          schema:
+            type: number
+      responses:
+        '204':
+          description: Test run deleted
+        '401':
+          description: Authentication failed
+        '404':
+          description: Test run not found
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Delete a test run
+      tags:
+        - TestRuns
+  /testRuns/{testRunId}/status:
+    get:
+      operationId: TestRunsController_getTestRunStatus
+      parameters:
+        - name: testRunId
+          required: true
+          in: path
+          description: ID of the test
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Status of the test
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestRunStatus'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Test run not found
+        '410':
+          description: Test run expired
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get the status of the test with the specified ID
+      tags:
+        - TestRuns
+  /testRuns/{testRunId}/fullStatus:
+    get:
+      operationId: TestRunsController_getTestRunFullStatus
+      parameters:
+        - name: testRunId
+          required: true
+          in: path
+          description: ID of the test
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Full status of the test
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TestRunFullStatus'
+                  - $ref: '#/components/schemas/GherkinTestRunFullStatus'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Test run not found
+        '410':
+          description: Test run expired
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get the full status of the test with the specified ID
+      tags:
+        - TestRuns
+  /testRuns/stop:
+    post:
+      operationId: TestRunsController_stopTestRuns
+      parameters: []
+      requestBody:
+        required: true
+        description: Ids of the test executions to stop
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopTestRuns'
+      responses:
+        '202':
+          description: Tests will be stopped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoppedTestRuns'
+        '400':
+          description: Body is malformed
+        '401':
+          description: Authentication failed
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Stop a list manual test executions
+      tags:
+        - TestRuns
+  /testRuns/query:
+    post:
+      operationId: TestRunsController_queryTestRuns
+      parameters:
+        - name: cursor
+          required: false
+          in: query
+          description: Only return test runs from the cursor ID
+          schema:
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: Maximum number of results to return
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestRunsFilter'
+      responses:
+        '200':
+          description: List of testRuns with nextCursor (for pagination)
+        '400':
+          description: Query is malformed
+        '401':
+          description: Authentication failed
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: List paginated testRuns using filters
+      tags:
+        - TestRuns
+  /testRuns/{testRunId}/screenshots/{screenshotId}:
+    get:
+      operationId: ScreenshotsController_getScreenshot
+      parameters:
+        - name: testRunId
+          required: true
+          in: path
+          description: ID of the test
+          schema:
+            type: number
+        - name: screenshotId
+          required: true
+          in: path
+          description: ID of the screenshot
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Screenshot is returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Screenshot'
+        '401':
+          description: Authentication failed
+        '404':
+          description: Screenshot not found
+        '410':
+          description: Test run expired
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get the screenshot with the specified id among a specific test
+      tags:
+        - Screenshots
+  /account/credits:
+    get:
+      operationId: AccountController_getTotalCredits
+      parameters: []
+      responses:
+        '200':
+          description: Test execution credits count
+          content:
+            application/json:
+              schema:
+                type: number
+        '401':
+          description: Authentication failed
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get test execution credits for a specified API Key
+      tags:
+        - Account
+  /account/purchases:
+    get:
+      operationId: AccountController_getPurchases
+      parameters: []
+      responses:
+        '200':
+          description: List of purchases
+        '401':
+          description: Authentication failed
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: List Credit Purchases for a specified API Key
+      tags:
+        - Account
+  /account/creditLedger:
+    get:
+      operationId: AccountController_getCreditLedger
+      parameters: []
+      responses:
+        '200':
+          description: List of Credit Ledger entries
+        '401':
+          description: Authentication failed
+        '429':
+          description: Too many requests
+      security:
+        - apiKey: []
+      summary: Get Credit Ledger for a specified API Key
+      tags:
+        - Account
+info:
+  title: Lynqa API
+  description: Agentic AI Test Execution.
+  version: 1.0.0
+  contact: {}
+tags: []
+servers:
+  - url: https://api.lynqa.smartesting.com
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: x-api-key
+      in: header
+      description: Lynqa API key created from https://my.lynqa.smartesting.com/integration
+  schemas:
+    StepCommand:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the command
+          enum:
+            - click
+            - doubleClick
+            - fill
+            - type
+            - select
+            - hover
+            - pressKey
+            - scroll
+          example: fill
+        value:
+          type: string
+          description: Value parameter passed to the command if exists
+          example: Lorem ipsum
+        htmlElement:
+          type: string
+          description: >-
+            A short plain-text description of the html element targeted by the
+            command if exists
+          example: The search field
+        screenshot:
+          type: string
+          description: UUID of the screenshot captured after the command, if available
+          example:
+            - 4b111ba4-c236-4770-67bf-0f17d0230e47
+      required:
+        - name
+    AssertionChecking:
+      type: object
+      properties:
+        assertion:
+          type: string
+          description: The human-readable assertion text
+          example: The page title contains "Dashboard"
+        checked:
+          type: boolean
+          description: Whether the assertion evaluated to true
+          example: true
+      required:
+        - assertion
+        - checked
+    AssertionsReport:
+      type: object
+      properties:
+        assertions:
+          description: List of checks performed for this step
+          type: array
+          items:
+            $ref: '#/components/schemas/AssertionChecking'
+        screenshot:
+          type: string
+          description: >-
+            UUID of screenshot taken at assertion time (base64 or URL depending
+            on configuration)
+          example: 4b111ba4-c236-4770-67bf-0f17d0230e47
+      required:
+        - assertions
+        - screenshot
+    StepReport:
+      type: object
+      properties:
+        commands:
+          description: Commands executed during this step.
+          type: array
+          items:
+            $ref: '#/components/schemas/StepCommand'
+        status:
+          type: string
+          description: Step execution status
+          enum:
+            - waiting
+            - running
+            - success
+            - failed
+            - error
+            - stopped
+            - not_run
+          example: success
+        start:
+          format: date-time
+          type: string
+          description: >-
+            Step start date. Present for RUNNING, STOPPED, SUCCESS, FAILED,
+            ERROR
+          example: '2025-09-18T09:01:02.000Z'
+        end:
+          format: date-time
+          type: string
+          description: Step end date. Present for STOPPED, SUCCESS, FAILED, ERROR
+          example: '2025-09-18T09:01:05.500Z'
+        assertionsReport:
+          description: Assertions report (only for SUCCESS or FAILED)
+          allOf:
+            - $ref: '#/components/schemas/AssertionsReport'
+        testVerdictCause:
+          type: string
+          description: In case of FAILED, describes why the step failed
+          example: Expected URL to contain /dashboard
+        error:
+          type: string
+          description: In case of ERROR, the internal error cause
+          enum:
+            - internal
+          example: internal
+      required:
+        - commands
+        - status
+    TestData:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the data
+          example: password
+        value:
+          type: string
+          description: Value of the data
+          example: mys4cr4t!
+      required:
+        - name
+        - value
+    TestRunContext:
+      type: object
+      properties:
+        clientLanguage:
+          type: string
+          description: Client language
+          example: en-US, english, en
+        clientDatetime:
+          type: string
+          description: Client locale datetime
+          example: Thu Feb 26 2026 09:26:12 GMT+0100 (Central Europe time)
+        secrets:
+          description: Test data to inject in test steps
+          type: array
+          items:
+            $ref: '#/components/schemas/TestData'
+    TextualData:
+      type: object
+      properties:
+        text:
+          type: string
+          example: The user is between 18 and 49
+      required:
+        - text
+    CreateAttachment:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attachment
+          example: invoice_260313.pdf
+        data:
+          type: string
+          description: Base64 encoded data URI
+          example: data:text/plain;base64,SGVsbG8gd29ybGQh
+      required:
+        - name
+        - data
+    CreateTestStep:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Test step action
+          example: Click on the "Login" button
+        expectedResult:
+          type: string
+          description: Test step assertion
+          example: Verify that the user is logged-in
+        guidance:
+          description: Guidance to help the agent to execute the test
+          type: array
+          items:
+            $ref: '#/components/schemas/TextualData'
+        attachments:
+          description: Attached files
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAttachment'
+      required:
+        - action
+    CreateTest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL of the system under test
+          example: https://example.com/
+        name:
+          type: string
+          description: Test run name
+          example: My test name
+        context:
+          description: Test run context
+          allOf:
+            - $ref: '#/components/schemas/TestRunContext'
+        guidance:
+          description: Guidance to help the agent to execute the test
+          type: array
+          items:
+            $ref: '#/components/schemas/TextualData'
+        architecture:
+          type: string
+          description: Architecture identifier
+          example: omeron
+        usedFallback:
+          type: boolean
+          description: Whether an architecture fallback was used
+          example: false
+        attachments:
+          description: Attached files
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAttachment'
+        steps:
+          description: Test steps
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateTestStep'
+      required:
+        - url
+        - steps
+    CreateGherkinTest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL of the system under test
+          example: https://example.com/
+        name:
+          type: string
+          description: Test run name
+          example: My test name
+        context:
+          description: Test run context
+          allOf:
+            - $ref: '#/components/schemas/TestRunContext'
+        guidance:
+          description: Guidance to help the agent to execute the test
+          type: array
+          items:
+            $ref: '#/components/schemas/TextualData'
+        architecture:
+          type: string
+          description: Architecture identifier
+          example: omeron
+        usedFallback:
+          type: boolean
+          description: Whether an architecture fallback was used
+          example: false
+        attachments:
+          description: Attached files
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAttachment'
+        scenario:
+          type: string
+          description: Gherkin scenario
+          example: |-
+            Given the user is connected
+            When the user search for a book
+            Then a list of books is displayed
+      required:
+        - url
+        - scenario
+    RunInitialReport:
+      type: object
+      properties:
+        screenshot:
+          type: string
+          description: >-
+            UUID of the screenshot captured at the very start of the run (base64
+            string or URL depending on configuration).
+          example: 4b111ba4-c236-4770-67bf-0f17d0230e47
+        error:
+          type: string
+          description: High-level startup error.
+          enum:
+            - host_not_reachable
+          example: host_not_reachable
+    TestRunStatus:
+      type: object
+      properties:
+        initialReport:
+          description: >-
+            Initial environment capture before executing any step (screenshot
+            UUID and a possible startup error).
+          example:
+            screenshot: 4b111ba4-c236-4770-67bf-0f17d0230e47
+          allOf:
+            - $ref: '#/components/schemas/RunInitialReport'
+        status:
+          type: string
+          description: Run status
+          enum:
+            - waiting
+            - running
+            - success
+            - failed
+            - error
+            - stopped
+            - not_run
+          example: running
+        statusMessage:
+          type: string
+          description: Run status message
+          example: Insufficient credits
+        start:
+          format: date-time
+          type: string
+          description: Start date
+          example: '2025-09-18T09:00:00.000Z'
+        end:
+          format: date-time
+          type: string
+          description: End date
+          example: '2025-09-18T09:05:27.000Z'
+        expiration:
+          format: date-time
+          type: string
+          description: Expiration date
+          example: '2025-09-18T09:05:27.000Z'
+      required:
+        - status
+    StopTestRuns:
+      type: object
+      properties:
+        testRunIds:
+          description: List of ids
+          example:
+            - m626fwxopxr489raizu6hjgy
+            - zcuk4l13zax1piz2h73imct6
+          type: array
+          items:
+            type: string
+      required:
+        - testRunIds
+    StoppedTestRuns:
+      type: object
+      properties:
+        stoppedTestRunIds:
+          description: List of ids
+          example:
+            - m626fwxopxr489raizu6hjgy
+            - zcuk4l13zax1piz2h73imct6
+          type: array
+          items:
+            type: string
+      required:
+        - stoppedTestRunIds
+    TimePeriod:
+      type: object
+      properties:
+        count:
+          type: number
+          example: 3
+          description: How many units (e.g., 3 hours)
+        unit:
+          type: string
+          enum:
+            - m
+            - h
+            - d
+            - M
+          description: 'Unit: minutes, hours, days, months'
+      required:
+        - count
+        - unit
+    TestRunsFilter:
+      type: object
+      properties:
+        statuses:
+          type: array
+          description: Filter test runs by statuses
+          items:
+            type: string
+            enum:
+              - waiting
+              - running
+              - success
+              - failed
+              - error
+              - stopped
+              - not_run
+        relativePeriod:
+          description: 'Relative time period like { count: 3, unit: "h" } for last 3 hours'
+          allOf:
+            - $ref: '#/components/schemas/TimePeriod'
+        startDate:
+          format: date-time
+          type: string
+          description: Start date for custom period
+        endDate:
+          format: date-time
+          type: string
+          description: End date for custom period
+        apiKeyIds:
+          description: Filter test runs by API key IDs
+          type: array
+          items:
+            type: array
+        testRunIds:
+          description: Filter test runs by IDs
+          type: array
+          items:
+            type: array
+    Screenshot:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Screenshot in base64 format
+      required:
+        - data
+    Attachment:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the attachment
+          example: invoice_260313.pdf
+        id:
+          type: string
+          description: UUID of the attachment
+      required:
+        - name
+        - id
+    GherkinStep:
+      type: object
+      properties:
+        keyword:
+          type: string
+          description: Gherkin keyword
+          example: Given
+        text:
+          type: string
+          description: Text of the step without Gherkin keyword
+          example: the user is connected
+      required:
+        - keyword
+        - text
+    GherkinTest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL of the system under test
+          example: https://example.com/
+        name:
+          type: string
+          description: Test run name
+          example: My test name
+        context:
+          description: Test run context
+          allOf:
+            - $ref: '#/components/schemas/TestRunContext'
+        guidance:
+          description: Guidance to help the agent to execute the test
+          type: array
+          items:
+            $ref: '#/components/schemas/TextualData'
+        architecture:
+          type: string
+          description: Architecture identifier
+          example: omeron
+        usedFallback:
+          type: boolean
+          description: Whether an architecture fallback was used
+          example: false
+        attachments:
+          description: Attached files
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        type:
+          type: string
+          enum:
+            - gherkin
+        steps:
+          description: Gherkin test steps
+          type: array
+          items:
+            $ref: '#/components/schemas/GherkinStep'
+      required:
+        - url
+        - type
+        - steps
+    TestStep:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Test step action
+          example: Click on the "Login" button
+        expectedResult:
+          type: string
+          description: Test step assertion
+          example: Verify that the user is logged-in
+        guidance:
+          description: Guidance to help the agent to execute the test
+          type: array
+          items:
+            $ref: '#/components/schemas/TextualData'
+        attachments:
+          description: Attached files
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+      required:
+        - action
+    Test:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL of the system under test
+          example: https://example.com/
+        name:
+          type: string
+          description: Test run name
+          example: My test name
+        context:
+          description: Test run context
+          allOf:
+            - $ref: '#/components/schemas/TestRunContext'
+        guidance:
+          description: Guidance to help the agent to execute the test
+          type: array
+          items:
+            $ref: '#/components/schemas/TextualData'
+        architecture:
+          type: string
+          description: Architecture identifier
+          example: omeron
+        usedFallback:
+          type: boolean
+          description: Whether an architecture fallback was used
+          example: false
+        attachments:
+          description: Attached files
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        type:
+          type: string
+          enum:
+            - manual
+        steps:
+          description: Test steps
+          type: array
+          items:
+            $ref: '#/components/schemas/TestStep'
+      required:
+        - url
+        - type
+        - steps
+    TestRunFullStatus:
+      type: object
+      properties:
+        initialReport:
+          description: >-
+            Initial environment capture before executing any step (screenshot
+            UUID and a possible startup error).
+          example:
+            screenshot: 4b111ba4-c236-4770-67bf-0f17d0230e47
+          allOf:
+            - $ref: '#/components/schemas/RunInitialReport'
+        status:
+          type: string
+          description: Run status
+          enum:
+            - waiting
+            - running
+            - success
+            - failed
+            - error
+            - stopped
+            - not_run
+          example: running
+        statusMessage:
+          type: string
+          description: Run status message
+          example: Insufficient credits
+        start:
+          format: date-time
+          type: string
+          description: Start date
+          example: '2025-09-18T09:00:00.000Z'
+        end:
+          format: date-time
+          type: string
+          description: End date
+          example: '2025-09-18T09:05:27.000Z'
+        expiration:
+          format: date-time
+          type: string
+          description: Expiration date
+          example: '2025-09-18T09:05:27.000Z'
+        stepStatuses:
+          description: >-
+            Per-step execution reports combining the commands executed and the
+            resulting outcome for each step. Depending on the step status, only
+            relevant fields are present (e.g., status, timestamps, assertions
+            report, verdict cause, or error).
+          type: array
+          items:
+            $ref: '#/components/schemas/StepReport'
+        type:
+          type: string
+          enum:
+            - manual
+        steps:
+          description: Test steps
+          type: array
+          items:
+            $ref: '#/components/schemas/TestStep'
+      required:
+        - status
+        - stepStatuses
+        - type
+        - steps
+    GherkinTestRunFullStatus:
+      type: object
+      properties:
+        initialReport:
+          description: >-
+            Initial environment capture before executing any step (screenshot
+            UUID and a possible startup error).
+          example:
+            screenshot: 4b111ba4-c236-4770-67bf-0f17d0230e47
+          allOf:
+            - $ref: '#/components/schemas/RunInitialReport'
+        status:
+          type: string
+          description: Run status
+          enum:
+            - waiting
+            - running
+            - success
+            - failed
+            - error
+            - stopped
+            - not_run
+          example: running
+        statusMessage:
+          type: string
+          description: Run status message
+          example: Insufficient credits
+        start:
+          format: date-time
+          type: string
+          description: Start date
+          example: '2025-09-18T09:00:00.000Z'
+        end:
+          format: date-time
+          type: string
+          description: End date
+          example: '2025-09-18T09:05:27.000Z'
+        expiration:
+          format: date-time
+          type: string
+          description: Expiration date
+          example: '2025-09-18T09:05:27.000Z'
+        stepStatuses:
+          description: >-
+            Per-step execution reports combining the commands executed and the
+            resulting outcome for each step. Depending on the step status, only
+            relevant fields are present (e.g., status, timestamps, assertions
+            report, verdict cause, or error).
+          type: array
+          items:
+            $ref: '#/components/schemas/StepReport'
+        type:
+          type: string
+          enum:
+            - gherkin
+        steps:
+          description: Gherkin test steps
+          type: array
+          items:
+            $ref: '#/components/schemas/GherkinStep'
+      required:
+        - status
+        - stepStatuses
+        - type
+        - steps
