@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from responses import matchers
 
-from pylynqa import CreateAttachment, LynqaClient, TestData, TestRunContext, TestRunsFilter, TestStep, TextualData
+from pylynqa import CreateAttachment, CreateTestStep, LynqaClient, TestData, TestRunContext, TestRunsFilter, TextualData
 from pylynqa.client import (
     ENDPOINT_ACCOUNT_CREDIT_LEDGER,
     ENDPOINT_ACCOUNT_CREDITS,
@@ -102,7 +102,7 @@ class TestAddTestRun:  # noqa: D101
         # Act
         test_run_id = client.add_test_run(
             url="https://example.com",
-            steps=[TestStep(action="Click login")],
+            steps=[CreateTestStep(action="Click login")],
         )
 
         # Assert
@@ -117,7 +117,13 @@ class TestAddTestRun:  # noqa: D101
         test_run_id = client.add_test_run(
             url="https://example.com",
             name="My test",
-            steps=[TestStep(action="Click login", expected_result="User is logged in")],
+            steps=[
+                CreateTestStep(
+                    action="Click login",
+                    expected_result="User is logged in",
+                    attachments=[CreateAttachment(name="step.txt", data="data:text/plain;base64,SmFuZQo=")],
+                )
+            ],
             context=TestRunContext(
                 client_language="en-US",
                 secrets=[TestData(name="password", value="s3cr3t")],
@@ -131,7 +137,13 @@ class TestAddTestRun:  # noqa: D101
         assert body(responses, 0) == {
             "url": "https://example.com",
             "name": "My test",
-            "steps": [{"action": "Click login", "expectedResult": "User is logged in"}],
+            "steps": [
+                {
+                    "action": "Click login",
+                    "expectedResult": "User is logged in",
+                    "attachments": [{"name": "step.txt", "data": "data:text/plain;base64,SmFuZQo="}],
+                }
+            ],
             "context": {
                 "clientLanguage": "en-US",
                 "secrets": [{"name": "password", "value": "s3cr3t"}],

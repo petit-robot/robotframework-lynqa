@@ -14,14 +14,14 @@ https://my.lynqa.smartesting.com/integration.
 
 ::
 
-    from lynqa import LynqaClient, TestStep
+    from lynqa import CreateTestStep, LynqaClient
 
     client = LynqaClient(api_key="your-api-key")
 
     run_id = client.add_test_run(
         url="https://example.com",
         steps=[
-            TestStep(
+            CreateTestStep(
                 action='Click on the "Login" button',
                 expected_result="The user is logged in",
             ),
@@ -37,7 +37,14 @@ from __future__ import annotations
 
 import requests
 
-from pylynqa.models import CreateAttachment, LynqaClientError, TestRunContext, TestRunsFilter, TestStep, TextualData
+from pylynqa.models import (
+    CreateAttachment,
+    CreateTestStep,
+    LynqaClientError,
+    TestRunContext,
+    TestRunsFilter,
+    TextualData,
+)
 
 DEFAULT_CONSUMER = "petit-robot:pylynqa"
 
@@ -141,7 +148,7 @@ class LynqaClient:
     def add_test_run(  # noqa: PLR0913
         self,
         url: str,
-        steps: list[TestStep],
+        steps: list[CreateTestStep],
         *,
         name: str | None = None,
         context: TestRunContext | None = None,
@@ -172,11 +179,11 @@ class LynqaClient:
             run_id = client.add_test_run(
                 url="https://example.com",
                 steps=[
-                    TestStep(
+                    CreateTestStep(
                         action='Fill in the username field with "admin"',
                         expected_result="The username field shows 'admin'",
                     ),
-                    TestStep(action='Click on "Submit"'),
+                    CreateTestStep(action='Click on "Submit"'),
                 ],
                 name="Login - happy path",
             )

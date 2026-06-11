@@ -4,6 +4,7 @@ __all__ = [
     "BASE_URL",
     "Attachment",
     "CreateAttachment",
+    "CreateTestStep",
     "LynqaClient",
     "LynqaClientError",
     "TestData",
@@ -18,6 +19,7 @@ from .client import BASE_URL, LynqaClient
 from .models import (
     Attachment,
     CreateAttachment,
+    CreateTestStep,
     LynqaClientError,
     TestData,
     TestRunContext,

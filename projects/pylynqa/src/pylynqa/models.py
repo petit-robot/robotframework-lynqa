@@ -48,20 +48,20 @@ class Attachment:
 
 
 @dataclass
-class TestStep:
-    """A single step in a manual test run.
+class CreateTestStep:
+    """A single step to include when creating a test run.
 
     :param action: Human-readable description of the action to perform, e.g. ``'Click on the "Login" button'``.
     :param expected_result: Optional assertion that should hold after the action is executed, e.g. ``'The user is
         redirected to /dashboard'``.
     :param guidance: Optional guidance hints to help the agent execute this step.
-    :param attachments: Attachments returned by the API for this step (read-only, server-assigned ids).
+    :param attachments: Optional file attachments for this step (base64-encoded).
     """
 
     action: str
     expected_result: str | None = None
     guidance: list[TextualData] = field(default_factory=list)
-    attachments: list[Attachment] = field(default_factory=list)
+    attachments: list[CreateAttachment] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         """Serialise to a JSON-compatible dict.
@@ -73,7 +73,25 @@ class TestStep:
             d["expectedResult"] = self.expected_result
         if self.guidance:
             d["guidance"] = [g.to_dict() for g in self.guidance]
+        if self.attachments:
+            d["attachments"] = [a.to_dict() for a in self.attachments]
         return d
+
+
+@dataclass
+class TestStep:
+    """A single step returned by the API for a test run.
+
+    :param action: Human-readable description of the action performed.
+    :param expected_result: Assertion associated with this step, if any.
+    :param guidance: Guidance hints attached to this step.
+    :param attachments: File attachments returned by the server (read-only, server-assigned ids).
+    """
+
+    action: str
+    expected_result: str | None = None
+    guidance: list[TextualData] = field(default_factory=list)
+    attachments: list[Attachment] = field(default_factory=list)
 
 
 @dataclass
