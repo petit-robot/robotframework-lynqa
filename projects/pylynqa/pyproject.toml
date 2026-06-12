@@ -19,7 +19,7 @@ dev = [
     "pytest-responses>=0.5",
     "ruff>=0.15",
     "ty>=0.0",
-    "coverage>=7.14"
+    "coverage>=7.10"
 ]
 
 [tool.setuptools.packages.find]
