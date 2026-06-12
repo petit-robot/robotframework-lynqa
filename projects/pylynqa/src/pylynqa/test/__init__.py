@@ -1,5 +1,7 @@
 """Unit tests for pylynqa."""
 
+# ruff: file-ignore[non-empty-init-module]
+
 import json
 from collections.abc import Callable
 
@@ -31,7 +33,7 @@ def create_http_response_error(status_code: int, error: str) -> dict:
     return resp_error
 
 
-def assert_raises_on_error(  # noqa: PLR0913
+def assert_raises_on_error(  # ruff: ignore[too-many-arguments,too-many-positional-arguments]
     responses,
     http_method: str,
     mock_url: str,

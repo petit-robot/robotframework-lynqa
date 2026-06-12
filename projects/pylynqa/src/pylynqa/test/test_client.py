@@ -1,4 +1,5 @@
 """Unit tests for :mod:`pylynqa.client`."""
+# ruff: file-ignore[undocumented-public-class,no-self-use]
 
 import base64
 from pathlib import Path
@@ -37,7 +38,7 @@ def client():
     return LynqaClient(api_key=API_KEY)
 
 
-class TestAuthentication:  # noqa: D101
+class TestAuthentication:
     def test_api_key_sent_in_header(self, client, responses):
         """Test."""
         # Arrange / Assert
@@ -52,7 +53,7 @@ class TestAuthentication:  # noqa: D101
         client.get_test_execution_credits()
 
 
-class TestHealth:  # noqa: D101
+class TestHealth:
     def test_health_live(self, client, responses):
         """Test."""
         # Arrange
@@ -78,7 +79,7 @@ class TestHealth:  # noqa: D101
         assert result == status_ready
 
 
-class TestAddTestRun:  # noqa: D101
+class TestAddTestRun:
     RUN_ID = "mf4zz9945nwbofv81shozwb5"
 
     def test_sends_required_fields(self, client, responses):
@@ -174,7 +175,7 @@ class TestAddTestRun:  # noqa: D101
         )
 
 
-class TestAddGherkinTestRun:  # noqa: D101
+class TestAddGherkinTestRun:
     RUN_ID = "mf4zz9945nwbofv81shozwb5"
     SCENARIO = "Given I am on the login page\nWhen I submit valid credentials\nThen I am logged in"
 
@@ -259,7 +260,7 @@ class TestAddGherkinTestRun:  # noqa: D101
         )
 
 
-class TestGetTestRun:  # noqa: D101
+class TestGetTestRun:
     def test_returns_test_run(self, client, responses):
         """Test."""
         # Arrange
@@ -292,7 +293,7 @@ class TestGetTestRun:  # noqa: D101
         )
 
 
-class TestDeleteTestRun:  # noqa: D101
+class TestDeleteTestRun:
     def test_delete(self, client, responses):
         """Test."""
         # Arrange
@@ -324,7 +325,7 @@ class TestDeleteTestRun:  # noqa: D101
         )
 
 
-class TestGetTestRunStatus:  # noqa: D101
+class TestGetTestRunStatus:
     def test_returns_status(self, client, responses):
         """Test."""
         # Arrange
@@ -357,7 +358,7 @@ class TestGetTestRunStatus:  # noqa: D101
         )
 
 
-class TestGetTestRunFullStatus:  # noqa: D101
+class TestGetTestRunFullStatus:
     def test_returns_full_status(self, client, responses):
         """Test."""
         # Arrange
@@ -391,7 +392,7 @@ class TestGetTestRunFullStatus:  # noqa: D101
         )
 
 
-class TestStopTestRuns:  # noqa: D101
+class TestStopTestRuns:
     def test_returns_stopped_ids(self, client, responses):
         """Test."""
         # Arrange
@@ -443,7 +444,7 @@ class TestStopTestRuns:  # noqa: D101
         )
 
 
-class TestQueryTestRuns:  # noqa: D101
+class TestQueryTestRuns:
     def test_returns_paginated_results(self, client, responses):
         """Test."""
         # Arrange
@@ -477,7 +478,7 @@ class TestQueryTestRuns:  # noqa: D101
         )
 
 
-class TestGetTestRunStepStatus:  # noqa: D101
+class TestGetTestRunStepStatus:
     def test_returns_step_report(self, client, responses):
         """Test."""
         # Arrange
@@ -510,7 +511,7 @@ class TestGetTestRunStepStatus:  # noqa: D101
         )
 
 
-class TestGetScreenshot:  # noqa: D101
+class TestGetScreenshot:
     def test_returns_base64_data(self, client, responses):
         """Test."""
         # Arrange
@@ -552,7 +553,7 @@ class TestGetScreenshot:  # noqa: D101
         )
 
 
-class TestAccount:  # noqa: D101
+class TestAccount:
     def test_get_test_execution_credits(self, client, responses):
         """Test."""
         # Arrange
