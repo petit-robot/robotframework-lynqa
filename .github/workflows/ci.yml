@@ -2,14 +2,17 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: ["main"]
   pull_request:
-    branches: ["**"]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 0 * * 1-5'
 
 jobs:
   quality:
     name: Code quality – pylynqa (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
     strategy:
       fail-fast: false
       matrix:
@@ -41,6 +44,7 @@ jobs:
   test:
     name: Tests – ${{ matrix.package }} (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
     strategy:
       fail-fast: false
       matrix:
@@ -60,4 +64,29 @@ jobs:
         run: pip install -e "projects/${{ matrix.package }}[dev]"
 
       - name: Run tests – ${{ matrix.package }}
+        run: pytest projects/${{ matrix.package }} -v --tb=short
+
+  atest:
+    name: Acceptance tests – pylynqa
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    strategy:
+      matrix:
+        package: [pylynqa]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+          cache: pip
+
+      - name: Install ${{ matrix.package }} with dev dependencies
+        run: pip install -e "projects/${{ matrix.package }}[dev]"
+
+      - name: Run acceptance tests – ${{ matrix.package }}
+        env:
+          LYNQA_API_KEY: ${{ secrets.LYNQA_API_KEY }}
         run: pytest projects/${{ matrix.package }} -v --tb=short
