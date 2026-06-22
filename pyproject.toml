@@ -20,7 +20,6 @@ dependencies = [
 dev = [
     "pytest>=7",
     "pytest-mock>=3",
-    "pytest-responses>=0.5",
     "ruff>=0.15",
     "ty>=0.0",
     "coverage>=7.10"
@@ -111,9 +110,10 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# `assert` is the idiomatic way to express test expectations.
-"**/test/**" = ["S101"]
-"**/atest/**" = ["S101"]
+# `assert` is the idiomatic way to express test expectations, and tests need to
+# reach into the private internals of the unit under test.
+"**/test/**" = ["S101", "SLF001"]
+"**/atest/**" = ["S101", "SLF001"]
 
 [tool.ty.environment]
 python-version = "3.9"

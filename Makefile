@@ -4,7 +4,7 @@ file      := .
 .PHONY: lint format ty test
 
 lint:
-	$(VENV)/ruff check $(file)
+	$(VENV)/ruff check --fix $(file)
 
 format:
 	$(VENV)/ruff format $(file)
