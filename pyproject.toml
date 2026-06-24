@@ -22,7 +22,8 @@ dev = [
     "pytest-mock>=3",
     "ruff>=0.15",
     "ty>=0.0",
-    "coverage>=7.10"
+    "coverage>=7.10",
+    "robotframework-robocop>=6"
 ]
 
 [tool.setuptools.packages.find]
@@ -114,6 +115,27 @@ select = [
 # reach into the private internals of the unit under test.
 "**/test/**" = ["S101", "SLF001"]
 "**/atest/**" = ["S101", "SLF001"]
+
+[tool.robocop]
+language = ["en", "fr"]
+
+[tool.robocop.lint]
+configure = [
+    "line-too-long.line_length=120"
+]
+reports = [
+    "all",
+    "return_status"
+]
+
+[tool.robocop.format]
+line_ending = "unix"
+line_length = 120
+configure = [
+    "RenameKeywords.enabled=True",
+    "RenameTestCases.enabled=True",
+    "RenameTestCases.capitalize_each_word=True"
+]
 
 [tool.ty.environment]
 python-version = "3.9"
