@@ -70,7 +70,7 @@ jobs:
     # Trusted Publishing: PyPI verifies this workflow via OIDC, no secrets.
     environment:
       name: pypi
-      url: https://pypi.org/p/pylynqa
+      url: https://pypi.org/p/robotframework-lynqa
     permissions:
       id-token: write
     steps:
