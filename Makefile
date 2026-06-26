@@ -1,22 +1,27 @@
-VENV        := .venv/bin
-file      := .
+file      := ./src
 
-.PHONY: lint format ty test robocop-lint robocop-format
+.PHONY: lint format ty test robocop-lint robocop-format docstrfmt sphinxlint
 
 lint:
-	$(VENV)/ruff check --fix $(file)
+	ruff check --fix $(file)
 
 format:
-	$(VENV)/ruff format $(file)
+	ruff format $(file)
 
 ty:
-	$(VENV)/ty check $(file)
+	ty check $(file)
 
 test:
-	$(VENV)/pytest -v --tb=short $(file)
+	pytest -v --tb=short $(file)
 
 robocop-lint:
-	$(VENV)/robocop check $(file)
+	robocop check $(file)
 
 robocop-format:
-	$(VENV)/robocop format $(file)
+	robocop format $(file)
+
+docstrfmt:
+	docstrfmt $(file)
+
+sphinxlint:
+	sphinx-lint --max-line-length 120 $(file)

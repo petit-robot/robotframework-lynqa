@@ -79,3 +79,24 @@ jobs:
 
       - name: Run tests
         run: pytest . -v --tb=short
+
+  docs:
+    name: Docs lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install with dev dependencies
+        run: pip install -e ".[dev]"
+
+      - name: docstrfmt
+        run: docstrfmt --check ./src
+
+      - name: sphinx-lint
+        run: sphinx-lint --max-line-length 120 ./src
