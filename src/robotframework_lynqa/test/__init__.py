@@ -11,9 +11,8 @@ API_KEY = "fake_api_key"
 class _CaptureLibInstance(ListenerV3):
     """Listener that captures the live LynqaLibrary instance during the run.
 
-    The ``.robot`` file owns the :class:`LynqaLibrary` instance (it is created
-    by the ``Library`` import), so the test cannot reference it directly. This
-    listener grabs that instance from the running context before the test ends.
+    The ``.robot`` file owns the :class:`LynqaLibrary` instance (it is created by the ``Library`` import), so the test
+    cannot reference it directly. This listener grabs that instance from the running context before the test ends.
     """
 
     def __init__(self) -> None:
