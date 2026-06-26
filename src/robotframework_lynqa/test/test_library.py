@@ -32,9 +32,8 @@ EXPECTED_SCENARIO = (
 def client(mocker):
     """Mock the Lynqa HTTP client so no real request is sent.
 
-    Patches :class:`LynqaClient` in the library module: every ``LynqaLibrary``
-    created during the run gets this mock as its ``_client``. The run is reported
-    as an immediately successful one.
+    Patches :class:`LynqaClient` in the library module: every ``LynqaLibrary`` created during the run gets this mock as
+    its ``_client``. The run is reported as an immediately successful one.
 
     :returns: The mock client instance shared by every ``LynqaLibrary``.
     """
