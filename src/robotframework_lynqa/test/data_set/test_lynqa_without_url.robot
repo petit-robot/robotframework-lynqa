@@ -1,6 +1,6 @@
 *** Settings ***
 Library     DateTime
-Library     robotframework_lynqa.LynqaLibrary    api_key=%{API_KEY}
+Library     robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY}
 
 
 *** Variables ***

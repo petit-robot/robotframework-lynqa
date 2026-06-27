@@ -9,7 +9,7 @@ argument:
 ::
 
     *** Settings ***
-    Library    robotframework_lynqa.LynqaLibrary    api_key=%{API_KEY}
+    Library    robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY}
 
     *** Variables ***
     ${LYNQA_URL}    https://example.com/
