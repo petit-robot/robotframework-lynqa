@@ -47,7 +47,7 @@ def client(mocker):
 @pytest.fixture
 def listener_probe(monkeypatch, mocker, client):
     """Initialize the listener probe used to capture the library instance."""
-    monkeypatch.setenv("API_KEY", API_KEY)
+    monkeypatch.setenv("LYNQA_API_KEY", API_KEY)
     mock_datetime = mocker.patch("robotframework_lynqa.library.datetime")
     fixed_now = datetime(2026, 6, 24, 9, 52, 0, tzinfo=timezone(timedelta(hours=2)))
     mock_datetime.now.return_value.astimezone.return_value = fixed_now
