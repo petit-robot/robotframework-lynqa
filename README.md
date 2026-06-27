@@ -1,6 +1,7 @@
 # robotframework-lynqa
 
 [![CI](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/ci.yml/badge.svg)](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/ci.yml)
+[![Acceptance test](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/acceptance.yml/badge.svg)](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/acceptance.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)
 
@@ -49,16 +50,16 @@ natural-language step:
 
 ```robotframework
 *** Settings ***
-Library    robotframework_lynqa.LynqaLibrary    api_key=%{API_KEY}
+Library    robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY}
 
 *** Variables ***
-${LYNQA_URL}    https://example.com/
+${LYNQA_URL}    https://lemonde.fr
 
 *** Test Cases ***
-Search For An Item
-    Given    the home page is open
-    When     the user searches for an item
-    Then     matching results are displayed
+Search An Article
+    Given    the website is open
+    When     I search an article on "france ia"
+    Then     there is an article on "IA agentique"
 ```
 
 The scenario is captured and submitted to Lynqa, which runs it against the site at `${LYNQA_URL}` and reports each step's
