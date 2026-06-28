@@ -8,7 +8,7 @@
 **robotframework-lynqa** is a [Robot Framework](https://robotframework.org) library for the
 [Lynqa](https://lynqa.smartesting.com) test execution AI Agent.
 
-![Robot Framework/Lynqa connector](docs/robotframework-lynqa.png)
+![Robot Framework/Lynqa connector](https://raw.githubusercontent.com/petit-robot/robotframework-lynqa/main/docs/robotframework-lynqa.png)
 
 Write your scenarios in plain Gherkin and have them executed by Lynqa against your web application, instead of by locally
 defined keywords. It builds on [pylynqa](https://github.com/petit-robot/pylynqa), the Python client for the Lynqa REST
