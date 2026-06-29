@@ -10,9 +10,12 @@
 
 ![Robot Framework/Lynqa connector](https://raw.githubusercontent.com/petit-robot/robotframework-lynqa/main/docs/robotframework-lynqa.png)
 
-Write your scenarios in plain Gherkin and have them executed by Lynqa against your web application, instead of by locally
-defined keywords. It builds on [pylynqa](https://github.com/petit-robot/pylynqa), the Python client for the Lynqa REST
-API.
+Write your scenarios in plain Gherkin and let Lynqa, [Smartesting](https://www.smartesting.com)'s AI test-execution agent, execute them autonomously.
+No need to implement local keywords, simply provide your web application's URL.
+Lynqa analyses your test steps and application UI, then runs your test cases as a user would, producing comprehensive execution evidence.
+UI changes are handled automatically, eliminating the need for test automation maintenance.
+
+It builds on [pylynqa](https://github.com/petit-robot/pylynqa), the Python client for the Lynqa REST API.
 
 ## Disclaimers
 
