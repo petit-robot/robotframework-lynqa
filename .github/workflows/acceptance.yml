@@ -23,8 +23,8 @@ jobs:
           python-version: "3.9"
           cache: pip
 
-      - name: Install with dev dependencies
-        run: pip install -e ".[dev]"
+      - name: Installation
+        run: pip install -e .
 
       - name: Run acceptance tests
         env:
