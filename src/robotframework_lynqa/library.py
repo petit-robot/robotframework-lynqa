@@ -29,7 +29,7 @@ from typing import Any
 import pylynqa
 from pylynqa import LynqaClient, TestData, TestRunContext
 from robot.api import SuiteVisitor
-from robot.api.interfaces import ListenerV3
+from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 
 BASE_URL = "https://api.lynqa.smartesting.com"
@@ -73,23 +73,22 @@ class _GherkinStepCollector(SuiteVisitor):
             self.steps.append(f"{keyword.name} {text_step}")
 
 
-class LynqaLibrary(ListenerV3):
+class LynqaLibrary:
     """Robot Framework library that runs Gherkin scenarios via Lynqa.
 
     Acts both as a test library exposing the Gherkin step keywords (``Given``/``When``/``Then``) and as a listener that
-    captures each scenario on :meth:`start_test` and submits it to the Lynqa execution agent.
-
-    See the :mod:`~robotframework_lynqa.library` module documentation for the configuration variables and a usage
-    example.
+    captures each scenario and submits it to the Lynqa execution agent.
     """
 
     ROBOT_LIBRARY_SCOPE = "TEST"
+    ROBOT_LIBRARY_DOC_FORMAT = "reST"
+    ROBOT_AUTO_KEYWORDS = False
 
     def __init__(self, api_key: str, base_url: str = BASE_URL) -> None:
         """Initialize the Lynqa library.
 
         :param api_key: API key used to authenticate against the Lynqa service.
-        :param base_url: Base URL of the Lynqa API. Defaults to :data:`BASE_URL`.
+        :param base_url: Base URL of the Lynqa API.
         """
         self.ROBOT_LIBRARY_LISTENER = self
         self._init_client(api_key, base_url)
@@ -163,7 +162,7 @@ class LynqaLibrary(ListenerV3):
         """Log the commands and assertions of a Gherkin keyword's Lynqa step.
 
         Logging happens here, when the keyword starts, rather than in the keyword body: Robot Framework stops executing
-        the bodies of the keywords that follow a failed one, but ``start_keyword`` still fires for them, so every
+        the bodies of the keywords that follow a failed one, but :meth:`start_keyword` still fires for them, so every
         Gherkin keyword gets its logs. The step is matched in execution order via :attr:`_step_index`, which is only
         incremented later in :meth:`end_keyword`.
 
@@ -256,18 +255,21 @@ class LynqaLibrary(ListenerV3):
     # Keywords exposed to Robot Framework
     # ------------------------------------------------------------------
 
+    @keyword
     def given(self, text: str) -> None:
         """Create a ``Given`` step in the current scenario.
 
         :param text: Natural-language description of the step.
         """
 
+    @keyword
     def when(self, text: str) -> None:
         """Create a ``When`` step in the current scenario.
 
         :param text: Natural-language description of the step.
         """
 
+    @keyword
     def then(self, text: str) -> None:
         """Create a ``Then`` step in the current scenario.
 

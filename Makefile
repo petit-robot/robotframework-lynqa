@@ -25,3 +25,6 @@ docstrfmt:
 
 sphinxlint:
 	sphinx-lint --max-line-length 120 $(file)
+
+doc:
+	libdoc robotframework_lynqa.LynqaLibrary::abc docs/LynqaLibrary.html
