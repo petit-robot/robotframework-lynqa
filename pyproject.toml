@@ -29,6 +29,10 @@ dev = [
     "sphinx-lint>=0.9"
 ]
 
+doc = [
+    "docutils>=0.22"
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
