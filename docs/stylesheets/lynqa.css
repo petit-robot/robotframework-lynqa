@@ -1,0 +1,36 @@
+/*
+ * Lynqa brand palette.
+ */
+
+:root {
+    --lynqa-indigo: #444bef;
+    --lynqa-indigo-light: #6a70f3;
+    --lynqa-indigo-dark: #3339c4;
+    --lynqa-lavender: #ab6cff;
+    --lynqa-lavender-deep: #7c5cff;
+    --lynqa-ink: #0f0f23;
+}
+
+
+/* Light mode -------------------------------------------------------------- */
+[data-md-color-scheme="default"] {
+    /* Tint the default background towards the Lynqa deep-indigo ink. */
+    --md-hue: 258;
+
+    --md-primary-fg-color: var(--lynqa-indigo-light);
+    --md-primary-fg-color--light: var(--lynqa-lavender);
+    --md-primary-fg-color--dark: var(--lynqa-indigo);
+    --md-accent-fg-color: var(--lynqa-lavender);
+
+    --md-typeset-a-color: var(--lynqa-lavender);
+}
+
+/* Dark mode --------------------------------------------------------------- */
+[data-md-color-scheme="slate"] {
+    --md-primary-fg-color: var(--lynqa-indigo);
+    --md-primary-fg-color--light: var(--lynqa-indigo-light);
+    --md-primary-fg-color--dark: var(--lynqa-indigo-dark);
+    --md-accent-fg-color: var(--lynqa-lavender-deep);
+
+    --md-typeset-a-color: var(--lynqa-indigo);
+}

@@ -1,0 +1,31 @@
+[project]
+site_name = "robotframework-lynqa"
+# The config file lives inside the docs directory, so the docs dir is "." (its
+# own directory) rather than the default "docs"
+docs_dir = "."
+site_description = "Robot Framework library for the Lynqa test execution AI agent"
+site_url = "https://petit-robot.github.io/robotframework-lynqa/"
+repo_url = "https://github.com/petit-robot/robotframework-lynqa"
+repo_name = "petit-robot/robotframework-lynqa"
+copyright = "Licensed under the Apache License 2.0"
+extra_css = ["stylesheets/lynqa.css"]
+
+[project.theme]
+font.text = "Inter"
+font.code = "JetBrains Mono"
+
+[project.theme.icon]
+logo = "lucide/bot"
+
+# Light and dark palettes recoloured to the Lynqa indigo/violet brand in
+# stylesheets/lynqa.css (via the "default" and "slate" scheme overrides).
+# The dark "slate" scheme is listed first so it is the default on load.
+[[project.theme.palette]]
+scheme = "slate"
+toggle.icon = "lucide/sun-medium"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to dark mode"

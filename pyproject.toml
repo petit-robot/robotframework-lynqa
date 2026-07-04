@@ -30,7 +30,8 @@ dev = [
 ]
 
 doc = [
-    "docutils>=0.22"
+    "docutils>=0.22",
+    "zensical>=0.0"
 ]
 
 [tool.setuptools.packages.find]
@@ -39,7 +40,6 @@ where = ["src"]
 [tool.setuptools_scm]
 
 [tool.ruff]
-# Exclude directories.
 exclude = [
     "venv"
 ]
@@ -52,8 +52,8 @@ indent-width = 4
 preview = true
 ignore = [
     # Resolve conflicting pydocstyle (D) rules: keep D211/D212, drop their pairs.
-    "D203",  # one-blank-line-before-class (conflicts with D211)
-    "D213",  # multi-line-summary-second-line (conflicts with D212)
+    "D203", # one-blank-line-before-class (conflicts with D211)
+    "D213", # multi-line-summary-second-line (conflicts with D212)
 ]
 select = [
     # pycodestyle (errors + warnings)
