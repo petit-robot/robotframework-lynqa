@@ -35,3 +35,7 @@ Thumbs.db
 
 # pytest
 .pytest_cache/
+
+# Zensical documentation build output
+docs/site/
+docs/.cache/

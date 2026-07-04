@@ -3,12 +3,15 @@
 [![CI](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/ci.yml/badge.svg)](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/ci.yml)
 [![Acceptance test](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/acceptance.yml/badge.svg)](https://github.com/petit-robot/robotframework-lynqa/actions/workflows/acceptance.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)
+[![Documentation](https://img.shields.io/badge/docs-Full%20documentation-blue.svg)](https://petit-robot.github.io/robotframework-lynqa/)
 
 **robotframework-lynqa** is a [Robot Framework](https://robotframework.org) library for the
 [Lynqa](https://lynqa.smartesting.com) test execution AI Agent.
 
-![Robot Framework/Lynqa connector](https://raw.githubusercontent.com/petit-robot/robotframework-lynqa/main/docs/robotframework-lynqa.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/petit-robot/robotframework-lynqa/main/docs/robotframework-lynqa-dark.png">
+  <img alt="Robot Framework/Lynqa connector" src="https://raw.githubusercontent.com/petit-robot/robotframework-lynqa/main/docs/robotframework-lynqa.png">
+</picture>
 
 Write your scenarios in plain Gherkin and let Lynqa, [Smartesting](https://www.smartesting.com)'s AI test-execution agent, execute them autonomously.
 No need to implement local keywords, simply provide your web application's URL.
@@ -40,12 +43,6 @@ It builds on [pylynqa](https://github.com/petit-robot/pylynqa), the Python clien
 pip install robotframework-lynqa
 ```
 
-> At this early stage the package may not be published on PyPI yet. In the meantime you can install it from source:
->
-> ```bash
-> pip install git+https://github.com/petit-robot/robotframework-lynqa.git
-> ```
-
 ## Quick start
 
 Import the library and write your test cases with the `Given`/`When`/`Then` keywords, each taking a single
@@ -68,14 +65,10 @@ Search An Article
 The scenario is captured and submitted to Lynqa, which runs it against the site at `${LYNQA_URL}` and reports each step's
 result back to Robot Framework.
 
-### Configuration variables
+## Documentation
 
-| Variable            | Required | Description                                                                 |
-| ------------------- | -------- |-----------------------------------------------------------------------------|
-| `${LYNQA_URL}`      | Yes      | URL of the web application under test.                                      |
-| `${LYNQA_LANGUAGE}` | No       | Language of the user running the scenario.                                  |
-| `${LYNQA_DATETIME}` | No       | Date and time of the run (defaults to the current local date and time).     |
-| `&{LYNQA_SECRETS}`  | No       | Mapping of secret name to value (e.g. `login=superu  password=TrèsS3cr3t`). |
+Full documentation: installation, configuration variables and the complete keyword reference — is available at
+<https://petit-robot.github.io/robotframework-lynqa/>.
 
 ## Collaboration
 
