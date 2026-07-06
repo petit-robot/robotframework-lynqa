@@ -58,6 +58,22 @@ robot my_tests.robot
 
 Create a key from the [Lynqa integration page](https://my.lynqa.smartesting.com/integration).
 
+## Execution timeout
+
+A Lynqa run is asynchronous: once a scenario is submitted, the library polls Lynqa until the run reaches a final
+status. By default it waits up to **1 hour** before failing the test with a timeout error.
+
+To change this behaviour, use Robot Framework's
+[timeout feature](https://robotframework.org/robotframework/latest/RobotFrameworkUserGuide.html#timeouts),
+the `Test Timeout` setting in `*** Settings ***`, or a `[Timeout]` on an individual test case, which caps how
+long a test, including this wait, is allowed to run:
+
+```robotframework
+*** Settings ***
+Library         robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY}
+Test Timeout    30 minutes
+```
+
 ## Next steps
 
 Head to the [Keyword reference](keywords.md) for the full details of the `Given`/`When`/`Then` keywords and how

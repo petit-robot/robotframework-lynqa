@@ -5,7 +5,7 @@ file      := ./src
 	robocop-lint robocop-format docstrfmt sphinxlint \
 	doc doc-serve atest
 
-all: lint format ty sphinxlint docstrfmt robocop-lint test robocop-format
+all: format docstrfmt robocop-format lint ty sphinxlint test
 
 install-dev:
 	pip install -e ".[dev]"

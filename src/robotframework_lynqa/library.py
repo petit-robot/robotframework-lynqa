@@ -40,8 +40,8 @@ GHERKIN_KEYWORDS = ("Given", "When", "Then")
 PENDING_STATUSES = ("waiting", "running", "not_run")
 
 # How often to poll the run status, and how long to wait before giving up.
-POLL_INTERVAL_SECONDS = 5
-RUN_TIMEOUT_SECONDS = 300
+POLL_INTERVAL_SECONDS = 10
+RUN_TIMEOUT_SECONDS = 3600
 
 # Variable names
 URL_VAR = "${LYNQA_URL}"
@@ -78,6 +78,13 @@ class LynqaLibrary:
 
     Acts both as a test library exposing the Gherkin step keywords (``Given``/``When``/``Then``) and as a listener that
     captures each scenario and submits it to the Lynqa execution agent.
+
+    **Execution timeout**:
+
+        Once a scenario is submitted, the library polls Lynqa until the run reaches a final status, waiting up to **1
+        hour** before failing the test with a timeout error. To change this behaviour, use Robot Framework's timeout
+        feature (the ``Test Timeout`` suite setting or a ``[Timeout]`` on the test case), which caps how long a test is
+        allowed to run.
     """
 
     ROBOT_LIBRARY_SCOPE = "TEST"
