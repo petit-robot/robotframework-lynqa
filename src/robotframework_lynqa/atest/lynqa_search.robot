@@ -7,7 +7,7 @@ Library             robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY
 
 
 *** Variables ***
-${LYNQA_URL}        https://www.google.com/
+${LYNQA_URL}    https://www.google.com/
 
 
 *** Test Cases ***
