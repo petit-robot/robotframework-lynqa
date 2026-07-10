@@ -104,7 +104,7 @@ TEST_RUN_FULL_STATUS_FAILURE_RESPONSE = {
         {
             "end": "2026-06-12T14:00:35.981Z",
             "start": "2026-06-12T14:00:35.981Z",
-            "status": "error",
+            "status": "failed",
             "commands": [],
             "assertionsReport": {
                 "assertions": [
@@ -115,6 +115,7 @@ TEST_RUN_FULL_STATUS_FAILURE_RESPONSE = {
                 ],
                 "screenshot": "d9b611e0-955d-4b69-a51b-58ed40d88fb3",
             },
+            "testVerdictCause": "An error occurred while executing the test",
         },
     ],
     "initialReport": {"screenshot": "b276c303-d612-4c25-a2cd-18d42b8b4930", "architecture": "omeron"},

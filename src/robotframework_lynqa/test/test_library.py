@@ -12,6 +12,7 @@ from robotframework_lynqa.library import LynqaLibrary
 from robotframework_lynqa.test import API_KEY, _CaptureLibInstance
 from robotframework_lynqa.test.data_set.testrun_full_status import TEST_RUN_FULL_STATUS_SUCCESS_RESPONSE
 from robotframework_lynqa.test.data_set.testrun_full_status_failure import TEST_RUN_FULL_STATUS_FAILURE_RESPONSE
+from robotframework_lynqa.test.test_reporter import EXPECTED_SCREENSHOT_COUNT
 
 DATA_SET_FOLDER = Path(__file__).parent / "data_set"
 TEST_LYNQA_ROBOT_FILE = DATA_SET_FOLDER / "test_lynqa_nominal.robot"
@@ -29,7 +30,7 @@ EXPECTED_SCENARIO = (
 
 
 @pytest.fixture
-def client(mocker):
+def client(mocker, screenshot_base64):
     """Mock the Lynqa HTTP client so no real request is sent.
 
     Patches :class:`LynqaClient` in the library module: every ``LynqaLibrary`` created during the run gets this mock as
@@ -41,6 +42,7 @@ def client(mocker):
     client.add_gherkin_test_run.return_value = 123456
     client.get_test_run_status.return_value = {"status": "success"}
     client.get_test_run_full_status.return_value = {"status": "success", "statusMessage": "OK"}
+    client.get_screenshot.return_value = screenshot_base64
     return client
 
 
@@ -124,6 +126,11 @@ def test_scenario_result(tmp_path, listener_probe, client):
     for keyword in keywords:
         assert keyword.status == "PASS"
     assert len(keywords[0].messages) > 1
+    # Assert Screenshots presence
+    embedded_images = [
+        message for keyword in keywords for message in keyword.messages if message.html and "<img" in message.message
+    ]
+    assert len(embedded_images) == EXPECTED_SCREENSHOT_COUNT
 
 
 def test_scenario_result_failure(tmp_path, listener_probe, client):
