@@ -21,16 +21,19 @@ argument:
         Then     matching results are displayed
 """
 
-import logging
+from __future__ import annotations
+
 import time
 from datetime import datetime
 from typing import Any
 
 import pylynqa
 from pylynqa import LynqaClient, TestData, TestRunContext
-from robot.api import SuiteVisitor
+from robot.api import SuiteVisitor, logger
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
+
+from robotframework_lynqa.reporter import StepReporter
 
 BASE_URL = "https://api.lynqa.smartesting.com"
 
@@ -102,6 +105,7 @@ class LynqaLibrary:
         self._run_id: str = ""
         self._start_error: Exception | None = None
         self._step_index: int = 0
+        self._reporter: StepReporter | None = None
 
         self.scenario: str = ""
         self.url: str | None = ""
@@ -109,7 +113,7 @@ class LynqaLibrary:
         self.results: dict[str, Any] = {}
 
     def _init_client(self, api_key: str, base_url: str):
-        """Initialize the Lynqa client with the good parameters.
+        """Initialize the Lynqa client.
 
         :param api_key: API key used to authenticate against the Lynqa service.
         :param base_url: Base URL of the Lynqa API.
@@ -149,7 +153,7 @@ class LynqaLibrary:
             self.context = self._search_context()
             self._execute_lynqa_testrun(name=data.name)
         except Exception as error:
-            logging.exception("Lynqa run preparation failed")
+            logger.error(f"Lynqa run preparation failed: {error}")
             self._start_error = error
 
     def end_test(self, data, result) -> None:
@@ -178,7 +182,8 @@ class LynqaLibrary:
         """
         if data.name not in GHERKIN_KEYWORDS:
             return
-        self._log_step_details()
+        if self._reporter is not None:
+            self._reporter.log_step(self._step_index, self.results)
 
     def end_keyword(self, data, result) -> None:
         """Set each Gherkin keyword's status from its matching Lynqa step.
@@ -219,9 +224,10 @@ class LynqaLibrary:
             name=name,
             scenario=self.scenario,
         )
-        logging.info(f"Testrun ID is: {self._run_id}")
+        logger.info(f"Testrun ID is: {self._run_id}")
         self._wait_until_testrun_end(timeout)
         self.results = self._client.get_test_run_full_status(self._run_id)
+        self._reporter = StepReporter(self._client, self._run_id, self.url)
 
     def _wait_until_testrun_end(self, timeout: float):
         """Wait until the test run reaches a final status.
@@ -235,7 +241,7 @@ class LynqaLibrary:
         deadline = time.monotonic() + timeout
         while True:
             status = self._client.get_test_run_status(self._run_id).get("status")
-            logging.debug(f"Current run status: {status}")
+            logger.debug(f"Current run status: {status}")
             if status not in PENDING_STATUSES:
                 return
             if time.monotonic() >= deadline:
@@ -286,30 +292,6 @@ class LynqaLibrary:
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
-
-    def _log_step_details(self) -> None:
-        """Log the commands and assertions of the current Gherkin step.
-
-        Logs two messages: a ``Commands:`` list with one ``- name: value`` bullet per command and an ``Assertions:``
-        list with one ``- assertion`` bullet per assertion. The step is the one matching the keyword at
-        :attr:`_step_index`.
-        """
-        steps = self.results.get("stepStatuses", [])
-        if self._step_index >= len(steps):
-            return
-        step = steps[self._step_index]
-
-        commands = step.get("commands") or []
-        command_lines = [
-            f"- {command.get('name')}: {command['value']}" if "value" in command else f"- {command.get('name')}"
-            for command in commands
-        ]
-        logging.info("\n".join(["Commands:", *command_lines]))
-
-        report = step.get("assertionsReport") or {}
-        assertions = report.get("assertions") or []
-        assertion_lines = [f"- {item['assertion']}" for item in assertions if "assertion" in item]
-        logging.info("\n".join(["Assertions:", *assertion_lines]))
 
     @staticmethod
     def _search_variable(variable_name) -> object:

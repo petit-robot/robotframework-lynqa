@@ -17,7 +17,7 @@ lint:
 	ruff check --fix $(file)
 
 format:
-	ruff format --check $(file)
+	ruff format $(file)
 
 ty:
 	ty check $(file)
