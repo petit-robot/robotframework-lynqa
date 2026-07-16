@@ -51,9 +51,8 @@ indent-width = 4
 [tool.ruff.lint]
 preview = true
 ignore = [
-    # Resolve conflicting pydocstyle (D) rules: keep D211/D212, drop their pairs.
-    "D203", # one-blank-line-before-class (conflicts with D211)
-    "D213", # multi-line-summary-second-line (conflicts with D212)
+    "incorrect-blank-line-before-class",  # Resolve conflicting pydocstyle (D) rules.
+    "multi-line-summary-second-line", # Resolve conflicting pydocstyle (D) rules.
 ]
 select = [
     # pycodestyle (errors + warnings)
@@ -120,8 +119,8 @@ select = [
 [tool.ruff.lint.per-file-ignores]
 # `assert` is the idiomatic way to express test expectations, and tests need to
 # reach into the private internals of the unit under test.
-"**/test/**" = ["S101", "SLF001"]
-"**/atest/**" = ["S101", "SLF001"]
+"**/test/**" = ["assert", "private-member-access"]
+"**/atest/**" = ["assert", "private-member-access"]
 
 [tool.docstrfmt]
 line_length = 120
