@@ -37,6 +37,22 @@ Search An Article
 The scenario is captured and submitted to Lynqa, which runs it against the site at `${LYNQA_URL}` and reports
 each step's result back to Robot Framework.
 
+## Reading the Robot log
+
+Beyond the pass/fail verdict, the library embeds Lynqa's execution evidence directly in the standard Robot
+Framework log (`log.html`). Under each `Given`/`When`/`Then` keyword you get a step-by-step account of what the
+agent actually did in the browser:
+
+- **Commands done by the agent**: every low-level action Lynqa performed to carry out the step. A command that failed is 
+  logged at `ERROR` level so it  stands out in red.
+- **Assertion results**: each check is logged as an `Assertion: "..."` line, at `INFO` level when the
+  assertion holds and at `ERROR` level when it fails. When a step fails, the reason reported by Lynqa is logged
+  as a `Verdict:` line.
+- **Screenshots**: the page state is captured as an inline screenshot at each stage. Screenshots are
+  embedded in a collapsible `screenshot` block, so you can expand only the ones you care about.
+
+![The Lynqa evidence embedded in the Robot Framework log](robotframework-lynqa-log.png)
+
 ## Configuration variables
 
 | Variable            | Required | Description                                                                 |
