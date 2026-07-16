@@ -3,7 +3,7 @@ name: Acceptance
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 23 * * 1-5'
+    - cron: '0 23 * * 1,3,5'
       timezone: "Europe/Paris"
 
 permissions:
