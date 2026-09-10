@@ -65,7 +65,7 @@ def library(client):
     return LynqaLibrary(api_key=API_KEY)
 
 
-def test_nominal_scenario(tmp_path, listener_probe):
+def test_nominal_scenario(tmp_path, listener_probe, client):
     """Test that the scenario is executed."""
     # Act
     rc = robot.run(str(TEST_LYNQA_ROBOT_FILE), outputdir=str(tmp_path), listener=listener_probe)
@@ -77,10 +77,11 @@ def test_nominal_scenario(tmp_path, listener_probe):
     assert listener_inst.scenario == EXPECTED_SCENARIO
     assert listener_inst.url == "https://www.super-u.ai"
     assert listener_inst.context == TestRunContext(
-        client_language="rf-RF",
+        browser_locale="fr_FR",
         client_datetime="Wed Jun 24 2026 09:52:00 GMT+0200",
         secrets=[TestData(name="login", value="superu"), TestData(name="password", value="TrèsS3cr3t")],
     )
+    assert client.add_gherkin_test_run.call_args.kwargs["context"] == listener_inst.context
 
 
 def test_variable_with_date(tmp_path, listener_probe):
@@ -92,7 +93,7 @@ def test_variable_with_date(tmp_path, listener_probe):
     listener_inst = listener_probe.instance
     assert rc == 0
     assert listener_inst.context == TestRunContext(
-        client_language="rf-RF",
+        browser_locale="fr_FR",
         client_datetime="Wed May 8 2026 09:00:00 GMT+0200",
         secrets=[TestData(name="login", value="superu"), TestData(name="password", value="TrèsS3cr3t")],
     )

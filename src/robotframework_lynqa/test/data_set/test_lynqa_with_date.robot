@@ -5,7 +5,7 @@ Library     robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY}
 
 *** Variables ***
 ${LYNQA_URL}            https://www.super-u.ai
-${LYNQA_LANGUAGE}       rf-RF
+${LYNQA_LOCALE}         fr_FR
 ${LYNQA_DATETIME}       Wed May 8 2026 09:00:00 GMT+0200
 &{LYNQA_SECRETS}        login=superu    password=TrèsS3cr3t
 
