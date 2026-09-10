@@ -3,9 +3,9 @@ Library     robotframework_lynqa.LynqaLibrary    api_key=%{LYNQA_API_KEY}
 
 
 *** Variables ***
-${LYNQA_URL}            https://www.super-u.ai
-${LYNQA_LANGUAGE}       rf-RF
-&{LYNQA_SECRETS}        login=superu    password=TrèsS3cr3t
+${LYNQA_URL}        https://www.super-u.ai
+${LYNQA_LOCALE}     fr_FR
+&{LYNQA_SECRETS}    login=superu    password=TrèsS3cr3t
 
 
 *** Test Cases ***

@@ -48,7 +48,7 @@ RUN_TIMEOUT_SECONDS = 3600
 
 # Variable names
 URL_VAR = "${LYNQA_URL}"
-LANGUAGE_VAR = "${LYNQA_LANGUAGE}"
+LOCALE_VAR = "${LYNQA_LOCALE}"
 DATETIME_VAR = "${LYNQA_DATETIME}"
 SECRETS_VAR = "&{LYNQA_SECRETS}"
 
@@ -221,8 +221,9 @@ class LynqaLibrary:
 
         self._run_id = self._client.add_gherkin_test_run(
             url=self.url,
-            name=name,
             scenario=self.scenario,
+            name=name,
+            context=self.context,
         )
         logger.info(f"Testrun ID is: {self._run_id}")
         self._wait_until_testrun_end(timeout)
@@ -323,16 +324,19 @@ class LynqaLibrary:
     def _search_context(self) -> TestRunContext:
         """Build the Lynqa run context from the ``LYNQA_*`` Robot Framework variables.
 
-        Reads the optional ``${LYNQA_LANGUAGE}`` and ``${LYNQA_DATETIME}`` variables and the ``&{LYNQA_SECRETS}``
-        mapping. When ``${LYNQA_DATETIME}`` is not set, the current local date and time is used.
+        Reads the optional ``${LYNQA_LOCALE}`` and ``${LYNQA_DATETIME}`` variables and the ``&{LYNQA_SECRETS}`` mapping.
+        When ``${LYNQA_DATETIME}`` is not set, the current local date and time is used. When ``${LYNQA_LOCALE}`` is not
+        set, the locale is left out so Lynqa applies its own default.
 
         :returns: The context passed to the Lynqa test run.
         """
-        client_language = self._search_variable(LANGUAGE_VAR)
+        browser_locale = self._search_variable(LOCALE_VAR)
         client_datetime = self._search_variable(DATETIME_VAR)
         if client_datetime is None:
             client_datetime = datetime.now().astimezone().strftime("%a %b %d %Y %H:%M:%S GMT%z")
         secrets = self._search_secrets_variables()
         return TestRunContext(
-            client_language=str(client_language), client_datetime=str(client_datetime), secrets=secrets
+            browser_locale=None if browser_locale is None else str(browser_locale),
+            client_datetime=str(client_datetime),
+            secrets=secrets,
         )

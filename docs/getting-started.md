@@ -58,7 +58,7 @@ agent actually did in the browser:
 | Variable            | Required | Description                                                                 |
 | ------------------- | -------- |-----------------------------------------------------------------------------|
 | `${LYNQA_URL}`      | Yes      | URL of the web application under test.                                      |
-| `${LYNQA_LANGUAGE}` | No       | Language of the user running the scenario.                                  |
+| `${LYNQA_LOCALE}`   | No       | Browser locale of the user running the scenario, e.g. `fr_FR`.              |
 | `${LYNQA_DATETIME}` | No       | Date and time of the run (defaults to the current local date and time).     |
 | `&{LYNQA_SECRETS}`  | No       | Mapping of secret name to value (e.g. `login=superu  password=TrèsS3cr3t`). |
 

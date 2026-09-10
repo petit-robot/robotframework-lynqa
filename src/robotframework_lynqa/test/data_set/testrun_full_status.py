@@ -14,13 +14,13 @@ TEST_RUN_FULL_STATUS_SUCCESS_RESPONSE = {
             "commands": [
                 {
                     "name": "scroll",
-                    "response": {"success": {"delta": 500, "direction": "down"}},
+                    "response": {"success": [{"delta": 500, "direction": "down"}]},
                     "screenshot": "3f85e362-d50e-4521-8447-27427110cf5f",
                 },
                 {
                     "name": "click",
                     "button": "left",
-                    "response": {"success": {"newUrl": None}},
+                    "response": {"success": [{"newUrl": None}]},
                     "screenshot": "4e63b6a6-b337-4642-a872-91f20a4ab919",
                     "htmlElement": '"Tout refuser button"',
                 },
@@ -71,7 +71,7 @@ TEST_RUN_FULL_STATUS_SUCCESS_RESPONSE = {
                 {
                     "name": "click",
                     "button": "left",
-                    "response": {"success": {"newUrl": None}},
+                    "response": {"success": [{"newUrl": None}]},
                     "screenshot": "62a28ce4-f106-4b70-94f7-ea640d55fcdc",
                     "htmlElement": "Search input field",
                 },
@@ -85,9 +85,11 @@ TEST_RUN_FULL_STATUS_SUCCESS_RESPONSE = {
                     "name": "pressKey",
                     "value": "Return",
                     "response": {
-                        "success": {
-                            "newUrl": "https://www.google.com/search?q=lynqa&sca_esv=2aa300c80f7be1f4&source=hp&ei=gxAsaqTHMqq4kdUP1ciGmAY&iflsig=AFdpzrgAAAAAaiwek3wNXsJiALMoqmxWYThTRkSuPVDQ&ved=0ahUKEwjklP737YGVAxUqXKQEHVWkAWMQ4dUDCCE&uact=5&oq=lynqa&gs_lp=Egdnd3Mtd2l6IgVseW5xYTIMEC4YgAQYChgLGLEDMg8QLhiABBgKGAsYsQMYgwEyDBAuGAoYCxixAxiABDIMEC4YChgLGLEDGIAEMgkQLhiABBgKGAsyCRAuGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAuGIAEGAoYCzIJEC4YgAQYChgLSJtnUMRAWJlBcAF4AJABAJgBM6AB1gGqAQE1uAEDyAEA-AEBmAIGoAKIAqgCCsICChAuGAMYjwEY6gLCAgoQABgDGI8BGOoCwgILEAAYgAQYsQMYgwHCAggQABiABBixA8ICCBAuGIAEGLEDwgIREC4YgAQYsQMYgwEYxwEY0QPCAg4QLhiABBixAxjHARjRA8ICBRAuGIAEwgIOEC4YgAQYigUYsQMYgwHCAg4QABiABBiKBRixAxiDAcICBhAAGAMYCsICBBAAGAPCAgUQABiABMICBxAAGIAEGAqYAw3xBaK8RTujFJwPkgcBNqAH50ayBwE1uAf7AcIHBTItNC4yyAcogAgB&sclient=gws-wiz&sei=3hAsauOqNoqbkdUP-YX-qAw"
-                        }
+                        "success": [
+                            {
+                                "newUrl": "https://www.google.com/search?q=lynqa&sca_esv=2aa300c80f7be1f4&source=hp&ei=gxAsaqTHMqq4kdUP1ciGmAY&iflsig=AFdpzrgAAAAAaiwek3wNXsJiALMoqmxWYThTRkSuPVDQ&ved=0ahUKEwjklP737YGVAxUqXKQEHVWkAWMQ4dUDCCE&uact=5&oq=lynqa&gs_lp=Egdnd3Mtd2l6IgVseW5xYTIMEC4YgAQYChgLGLEDMg8QLhiABBgKGAsYsQMYgwEyDBAuGAoYCxixAxiABDIMEC4YChgLGLEDGIAEMgkQLhiABBgKGAsyCRAuGIAEGAoYCzIJEAAYgAQYChgLMgkQABiABBgKGAsyCRAuGIAEGAoYCzIJEC4YgAQYChgLSJtnUMRAWJlBcAF4AJABAJgBM6AB1gGqAQE1uAEDyAEA-AEBmAIGoAKIAqgCCsICChAuGAMYjwEY6gLCAgoQABgDGI8BGOoCwgILEAAYgAQYsQMYgwHCAggQABiABBixA8ICCBAuGIAEGLEDwgIREC4YgAQYsQMYgwEYxwEY0QPCAg4QLhiABBixAxjHARjRA8ICBRAuGIAEwgIOEC4YgAQYigUYsQMYgwHCAg4QABiABBiKBRixAxiDAcICBhAAGAMYCsICBBAAGAPCAgUQABiABMICBxAAGIAEGAqYAw3xBaK8RTujFJwPkgcBNqAH50ayBwE1uAf7AcIHBTItNC4yyAcogAgB&sclient=gws-wiz&sei=3hAsauOqNoqbkdUP-YX-qAw"
+                            }
+                        ]
                     },
                     "screenshot": "d7a51561-7ac9-4a55-bdf6-b809c5287a69",
                     "keysSequence": ["Return"],
